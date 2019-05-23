@@ -11,7 +11,7 @@ class FluterInstall {
     return version;
   }
 
-   static   installApk(String path) async {
-     await _channel.invokeMethod('install',{"path":path});
+   static   installApk(String path,String packagename) async {
+     await _channel.invokeMethod('install',{"path":path,"packagename":packagename});
   }
 }

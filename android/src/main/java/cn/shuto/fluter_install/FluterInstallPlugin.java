@@ -31,8 +31,14 @@ public class FluterInstallPlugin implements MethodCallHandler {
   @Override
   public void onMethodCall(MethodCall call, Result result) {
     if (call.method.equals("install")) {
+      String packagename = argument("packagename");
       String path =call.argument("path");
-      install(path);
+      if(packagename == null ||"".equals(packagename)){
+        install(path);
+      } else {
+        install(path,packagename);
+      }
+
     } else {
       result.notImplemented();
     }
@@ -48,6 +54,25 @@ public class FluterInstallPlugin implements MethodCallHandler {
       Uri contentUri = FileProvider.getUriForFile(
               context
               , "cn.shuto.sinofranch.fileprovider"
+              , apkFile);
+      intent.setDataAndType(contentUri, "application/vnd.android.package-archive");
+    } else {
+      Log.i("SDK_INT","22222222222222");
+      intent.setDataAndType(Uri.fromFile(apkFile), "application/vnd.android.package-archive");
+    }
+    context.startActivity(intent);
+  }
+
+  private void install(String filePath,String packagename) {
+    File apkFile = new File(filePath);
+    Intent intent = new Intent(Intent.ACTION_VIEW);
+    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+      Log.i("SDK_INT","1111111111");
+      intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+      Uri contentUri = FileProvider.getUriForFile(
+              context
+              , packagename+".fileprovider"
               , apkFile);
       intent.setDataAndType(contentUri, "application/vnd.android.package-archive");
     } else {
