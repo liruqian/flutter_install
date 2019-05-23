@@ -31,7 +31,7 @@ public class FluterInstallPlugin implements MethodCallHandler {
   @Override
   public void onMethodCall(MethodCall call, Result result) {
     if (call.method.equals("install")) {
-      String packagename = argument("packagename");
+      String packagename = call.argument("packagename");
       String path =call.argument("path");
       if(packagename == null ||"".equals(packagename)){
         install(path);
